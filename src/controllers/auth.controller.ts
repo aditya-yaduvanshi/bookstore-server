@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import UserModel, { User } from "@/models/users.model";
-import { SignupSchema } from "@/utils/validations";
+import { LoginSchema, SignupSchema } from "@/utils/validations";
 import { createAccessKey } from "@/lib/jwt";
+import { verifyHash } from "@/lib/bcrypt";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -32,9 +33,37 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
 
-    return res.json({ data: { accessToken }, error: null });
+    return res.status(201).json({ data: { accessToken }, error: null });
   } catch (err) {
     console.log("Signup error:", err);
+    return res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const body = req.body as Omit<User, "_id">;
+    const { error } = LoginSchema.validate(body);
+    if (error) return res.status(400).json({ error: error.message });
+
+    const user = await UserModel.findOne({ email: body.email });
+    if (!user) return res.status(400).json({ error: "Incorrect email!" });
+
+    const isVerfied = await verifyHash(body.password, user.password);
+    if (!isVerfied)
+      return res.status(400).json({ error: "Incorrect password!" });
+
+    const accessToken = await createAccessKey({
+      user: {
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+      },
+    });
+
+    return res.json({ data: { accessToken }, error: null });
+  } catch (err) {
+    console.log("Login error:", err);
     return res.status(500).json({ error: "Something went wrong!" });
   }
 };
