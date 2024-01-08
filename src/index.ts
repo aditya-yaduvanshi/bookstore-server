@@ -3,7 +3,9 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import connectDb from "@/config/db";
+import { isAuth } from "@/middlewares/auth";
 import authRouter from "@/routes/auth.route";
+import booksRouter from "@/routes/books.route";
 
 const PORT = process.env.PORT || 5000;
 
@@ -18,6 +20,7 @@ app.get("/", async (_req, res) => {
 
 // api routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/books", isAuth, booksRouter);
 
 app.listen(PORT, () => {
   console.log("Server is running on port: ", PORT);
