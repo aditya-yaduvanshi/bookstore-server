@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import UserModel, { User } from "@/models/users.model";
+import UserModel from "@/models/users.model";
 import { LoginSchema, SignupSchema } from "@/utils/validations";
 import { createAccessKey } from "@/lib/jwt";
 import { verifyHash } from "@/lib/bcrypt";
+import { User } from "@/types/auth";
 
 export const signup = async (req: Request, res: Response) => {
   try {

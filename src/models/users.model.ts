@@ -1,12 +1,6 @@
-import { createHash } from "lib/bcrypt";
 import mongoose, { CallbackError } from "mongoose";
-
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { createHash } from "@/lib/bcrypt";
+import { User } from "@/types/auth";
 
 const UserSchema = new mongoose.Schema<User>(
   {
