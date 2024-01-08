@@ -33,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(201).json({ data: { accessToken }, error: null });
+    return res.status(201).json({ data: { accessToken } });
   } catch (err) {
     console.log("Signup error:", err);
     return res.status(500).json({ error: "Something went wrong!" });
@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
       },
     });
 
-    return res.json({ data: { accessToken }, error: null });
+    return res.json({ data: { accessToken } });
   } catch (err) {
     console.log("Login error:", err);
     return res.status(500).json({ error: "Something went wrong!" });
