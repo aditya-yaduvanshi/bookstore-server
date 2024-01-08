@@ -20,7 +20,10 @@ const BookSchema = new mongoose.Schema(
       maxLength: 200,
     },
     cover: String,
-    description: String,
+    description: {
+      type: String,
+      maxLength: 2000,
+    },
     author: {
       type: String,
       required: true,
@@ -30,6 +33,7 @@ const BookSchema = new mongoose.Schema(
     price: {
       type: Number,
       min: 0,
+      max: 9999999999
     },
     isPublished: {
       type: Boolean,
