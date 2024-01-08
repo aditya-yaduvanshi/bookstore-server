@@ -74,7 +74,7 @@ export const searchBooks = async (req: AuthRequest, res: Response) => {
   try {
     const title = req.query.title;
     if (!title || typeof title !== "string")
-      return res.status(400).json({ error: "Title must be a valid string" });
+      return res.status(400).json({ error: "Title must be a valid string!" });
 
     const books = await BookModel.find({
       isPublished: true,
@@ -85,6 +85,39 @@ export const searchBooks = async (req: AuthRequest, res: Response) => {
     });
   } catch (err) {
     console.log("Search books error:", err);
+    return res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
+export const unpublishBook = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params.id;
+    const currentUser = req.user!;
+    if (!id)
+      return res.status(400).json({ error: "Book id must be provided!" });
+
+    const book = await BookModel.findOne({
+      _id: id,
+      publishedBy: currentUser._id,
+    });
+    if (!book)
+      return res.status(400).json({
+        error: "Book not found or does not belongs to the current user!",
+      });
+
+    book.isPublished = false;
+    const isUnpublished = await book.save();
+
+    if (!isUnpublished)
+      return res.status(500).json({
+        error: "Cannot unpublish at the moment. Please try again later.",
+      });
+
+    return res.status(200).json({
+      data: getBookFields(book as unknown as Book),
+    });
+  } catch (err) {
+    console.log("Unpublish book error:", err);
     return res.status(500).json({ error: "Something went wrong!" });
   }
 };
