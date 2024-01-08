@@ -1,16 +1,5 @@
 import mongoose from "mongoose";
 
-export interface Book {
-  _id: string;
-  title: string;
-  cover: string;
-  description: string;
-  price: number;
-  isPublished: boolean;
-  publishedBy: string;
-  author: string;
-}
-
 const BookSchema = new mongoose.Schema(
   {
     title: {
