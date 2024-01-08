@@ -1,7 +1,9 @@
 import { Response } from "express";
 import { AuthRequest } from "@/types/auth";
+import { Book } from "@/types/book";
 import { PublishBookSchema } from "@/utils/validations";
-import BookModel, { Book } from "@/models/books.model";
+import BookModel from "@/models/books.model";
+import { getBookFields } from "@/utils/books";
 
 export const publishBook = async (req: AuthRequest, res: Response) => {
   try {
@@ -29,17 +31,7 @@ export const publishBook = async (req: AuthRequest, res: Response) => {
       });
 
     return res.status(201).json({
-      data: {
-        title: book.title,
-        description: book.description,
-        cover: book.cover,
-        price: book.price,
-        author: book.author,
-        isPublised: book.isPublished,
-        publishedBy: book.publishedBy,
-        createdAt: book.createdAt,
-        updatedAt: book.updatedAt,
-      },
+      data: getBookFields(book as unknown as Book),
     });
   } catch (err) {
     console.log("Publish book error:", err);
@@ -47,24 +39,33 @@ export const publishBook = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const getPublishedBooks = async (req: AuthRequest, res: Response) => {
+export const getPublishedBooks = async (_req: AuthRequest, res: Response) => {
   try {
     const books = await BookModel.find({ isPublished: true });
     return res.status(200).json({
-      data: books.map((book) => ({
-        title: book.title,
-        description: book.description,
-        cover: book.cover,
-        price: book.price,
-        author: book.author,
-        isPublised: book.isPublished,
-        publishedBy: book.publishedBy,
-        createdAt: book.createdAt,
-        updatedAt: book.updatedAt,
-      })),
+      data: books.map((book) => getBookFields(book as unknown as Book)),
     });
   } catch (err) {
-    console.log("Get bublished books error:", err);
+    console.log("Get published books error:", err);
+    return res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
+export const getUserPublishedBooks = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  try {
+    const currentUser = req.user!;
+    const books = await BookModel.find({
+      isPublished: true,
+      publishedBy: currentUser._id,
+    });
+    return res.status(200).json({
+      data: books.map((book) => getBookFields(book as unknown as Book)),
+    });
+  } catch (err) {
+    console.log("Get user published books error:", err);
     return res.status(500).json({ error: "Something went wrong!" });
   }
 };
