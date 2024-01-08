@@ -15,6 +15,13 @@ const options = {
         url: `${HOST}/api/v1`,
       },
     ],
+    securityDefinitions: {
+      bearerAuth: {
+        type: "apiKey",
+        name: "Authorization",
+        in: "header",
+      },
+    },
   },
   apis: ["src/routes/*.ts"],
 };
