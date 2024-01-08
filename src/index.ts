@@ -1,8 +1,9 @@
 import "dotenv/config";
 import express from "express";
-import cors from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
 import connectDb from "@/config/db";
+import authRouter from "@/routes/auth.route";
 
 const PORT = process.env.PORT || 5000;
 
@@ -14,6 +15,9 @@ app.use(bodyParser.json());
 app.get("/", async (_req, res) => {
   res.send("Hello from server!");
 });
+
+// api routes
+app.use("/api/v1/auth", authRouter);
 
 app.listen(PORT, () => {
   console.log("Server is running on port: ", PORT);
