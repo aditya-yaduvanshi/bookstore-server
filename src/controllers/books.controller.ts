@@ -46,3 +46,25 @@ export const publishBook = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ error: "Something went wrong!" });
   }
 };
+
+export const getPublishedBooks = async (req: AuthRequest, res: Response) => {
+  try {
+    const books = await BookModel.find({ isPublished: true });
+    return res.status(200).json({
+      data: books.map((book) => ({
+        title: book.title,
+        description: book.description,
+        cover: book.cover,
+        price: book.price,
+        author: book.author,
+        isPublised: book.isPublished,
+        publishedBy: book.publishedBy,
+        createdAt: book.createdAt,
+        updatedAt: book.updatedAt,
+      })),
+    });
+  } catch (err) {
+    console.log("Get bublished books error:", err);
+    return res.status(500).json({ error: "Something went wrong!" });
+  }
+};
