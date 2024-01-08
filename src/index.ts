@@ -2,7 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
 import connectDb from "@/config/db";
+import swaggerOptions from "@/config/swagger";
 import { isAuth } from "@/middlewares/auth";
 import authRouter from "@/routes/auth.route";
 import booksRouter from "@/routes/books.route";
@@ -17,6 +20,9 @@ app.use(bodyParser.json());
 app.get("/", async (_req, res) => {
   res.send("Hello from server!");
 });
+
+// swagger api docs
+app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));
 
 // api routes
 app.use("/api/v1/auth", authRouter);
