@@ -31,3 +31,13 @@ export const LoginSchema = joi
     password: joi.string().required(),
   })
   .required();
+
+export const PublishBookSchema = joi
+  .object({
+    title: joi.string().required().min(3).max(200),
+    description: joi.string().max(2000),
+    price: joi.number().min(0).max(9999999999).required(),
+    cover: joi.string(),
+    author: joi.string().required().min(4).max(64),
+  })
+  .required();
