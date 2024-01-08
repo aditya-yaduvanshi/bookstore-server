@@ -6,7 +6,7 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY || "secret_key";
 
 export const createAccessKey = async (payload: Payload) => {
   return jwt.sign(payload, SECRET_KEY, {
-    expiresIn: "1s",
+    expiresIn: "1d",
   });
 };
 
