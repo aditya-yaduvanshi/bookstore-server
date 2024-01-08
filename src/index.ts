@@ -22,7 +22,7 @@ app.get("/", async (_req, res) => {
 });
 
 // swagger api docs
-app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));
 
 // api routes
 app.use("/api/v1/auth", authRouter);
