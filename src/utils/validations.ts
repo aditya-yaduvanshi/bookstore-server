@@ -14,13 +14,12 @@ export const SignupSchema = joi
       .message("Email is required and must be valid email."),
     password: joi
       .string()
-      .pattern(
-        new RegExp(
-          "^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{6,15}$"
-        )
-      )
+      .required()
+      .alphanum()
+      .min(6)
+      .max(15)
       .message(
-        "Password is required and must contain atleast one number, one lowercase, one uppercase and one special character and between 6 to 15 characters."
+        "Password is required and should be alpha-numeric between 6 to 15 characters."
       ),
   })
   .required();
